@@ -1,0 +1,26 @@
+{
+  "name": "react-view-pager-touch",
+  "version": "1.0.0",
+  "description": "A ViewPager-like React Component that has perfect kenetic scrolling, scroll locking, and bounce just like its native counterpart.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jamesloper/react-view-pager-touch.git"
+  },
+  "keywords": [
+    "react",
+    "view",
+    "pager",
+    "viewpager",
+    "touch"
+  ],
+  "author": "James Loper",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jamesloper/react-view-pager-touch/issues"
+  },
+  "homepage": "https://github.com/jamesloper/react-view-pager-touch",
+}
