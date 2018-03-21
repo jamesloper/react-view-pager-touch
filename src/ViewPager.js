@@ -1,19 +1,23 @@
-const React = require('react');
-const pan = require('./util/PanResponder');
-const xform = require('./util/xform');
-const clamp = require('./util/clamp');
+import React, { Component } from 'react';
+import pan from './util/PanResponder';
+import xform from './util/xform';
+import clamp from './util/clamp';
+import PropTypes from 'prop-types';
 
 const ios = !!navigator.userAgent.match('iPhone OS');
 const width = document.body.clientWidth;
 const easeOutCubic = (t) => (--t) * t * t + 1;
+const range = (n) => Array.apply(null, {length: n}).map(Number.call, Number);
 
-class ViewPager extends React.Component {
+class ViewPager extends Component {
 	static propTypes = {
-		currentPage: Number,
-		itemsPerPage: Number,
-		minPage: Number,
-		items: Array,
-		className: String,
+		currentPage: PropTypes.number.isRequired,
+		onPageSelected: PropTypes.func.isRequired,
+		itemsPerPage: PropTypes.number,
+		items: PropTypes.array.isRequired,
+		minPage: PropTypes.number,
+		className: PropTypes.string,
+		scrollEnabled: PropTypes.bool,
 	};
 
 	static defaultProps = {
@@ -22,6 +26,7 @@ class ViewPager extends React.Component {
 		minPage: 0,
 		items: [],
 		className: '',
+		scrollEnabled: true,
 	};
 
 	constructor(props) {
@@ -55,7 +60,6 @@ class ViewPager extends React.Component {
 	render() {
 		const {id, className} = this.props;
 
-
 		return (
 			<div
 				id={id}
@@ -65,7 +69,7 @@ class ViewPager extends React.Component {
 				<div className="over" id="over-left" ref={el => this.overLeft = el}/>
 				<div className="over" id="over-right" ref={el => this.overRight = el}/>
 				<div className="viewpager-canvas" ref={el => this.canvas = el}>
-					{_.range(0, this.numPages).map(this.renderPage.bind(this))}
+					{range(this.numPages).map(this.renderPage.bind(this))}
 				</div>
 			</div>
 		);
@@ -112,11 +116,11 @@ class ViewPager extends React.Component {
 	touchStart(e) {
 		this.startX = this.x;
 		this.scrollHoriz = false;
-		pan.initializeTouch(e);
+		if (this.props.scrollEnabled) pan.initializeTouch(e);
 	}
 
 	touchMove(e) {
-		if (!e.cancelable) return;
+		if (!e.cancelable || !this.props.scrollEnabled) return;
 		const {dx, absX} = pan.trackMovement(e);
 		if (absX > 10) this.scrollHoriz = true;
 		if (this.scrollHoriz) {
@@ -127,13 +131,19 @@ class ViewPager extends React.Component {
 
 	touchEnd() {
 		if (!this.scrollHoriz) return;
-		const {currentPage, onChangePage, minPage} = this.props;
+		const {currentPage, onPageSelected, minPage, items} = this.props;
 		const {vx, flick} = pan.getReleaseVelocity();
 
 		// Flick (momentum) or snap (round) according to flick velocity
 		let newPage = flick ? currentPage - Math.sign(vx) : Math.round(this.x / width);
 		newPage = clamp(newPage, minPage, this.numPages);
-		onChangePage(newPage);
+
+		onPageSelected({
+			position: newPage,
+			previous: currentPage,
+			offset: Math.sign(newPage - currentPage),
+			item: items[newPage],
+		});
 
 		// Clear android overflow
 		if (!ios) {
@@ -155,9 +165,7 @@ class ViewPager extends React.Component {
 
 		const animate = () => {
 			if (pan.touch) return;
-
 			const t = Date.now() - t1;
-
 			if (t >= duration) {
 				this.scrollTo(x2);
 			} else {

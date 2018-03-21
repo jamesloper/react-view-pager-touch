@@ -13,3 +13,10 @@ import ViewPager from 'react-view-pager-touch';
     minPage={3}
 />
 ```
+
+You'll want to include this CSS in your styles file, or it won't work properly.
+```css
+.viewpager {overflow:hidden; position:relative; width:100%;}
+.viewpager-canvas {white-space:nowrap; width:100%; overflow:visible; backface-visibility:hidden; transform-style:flat;}
+.viewpager-view {width:100%; display:inline-block}
+```
