@@ -54,7 +54,9 @@ class ViewPager extends Component {
 		this.el.addEventListener('touchstart', this.touchStart);
 		this.el.addEventListener('touchmove', this.touchMove);
 		this.el.addEventListener('touchend', this.touchEnd);
-		this.scrollTo(this.x); // sync first render
+		setTimeout(() => {
+			this.scrollTo(this.x); // sync first render
+		}, 0);
 	}
 
 	render() {
