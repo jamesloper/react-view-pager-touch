@@ -50,19 +50,6 @@ Index of the page that should be selected.
 
 ---
 
-### `onPageScroll`
-
-Executed when transitioning between pages (ether because of animation for the requested page change or when user is swiping/dragging between pages) The `event` object for this callback will carry following data:
-
-* position - index of first page from the left that is currently visible
-* offset - value from range [0,1) describing stage between page transitions. Value x means that (1 - x) fraction of the page at "position" index is visible, and x fraction of the next page is visible.
-
-| Type		 | Required |
-| -------- | -------- |
-| function | No			 |
-
----
-
 ### `onPageScrollStateChanged`
 
 Function called when the page scrolling state has changed. The page scrolling state can be in 3 states:
@@ -82,6 +69,8 @@ Function called when the page scrolling state has changed. The page scrolling st
 This callback will be called once ViewPager finish navigating to selected page (when user swipes between pages). The `event.nativeEvent` object passed to this callback will have following fields:
 
 * position - index of page that has been selected
+* offset - the new page index minus the old page index (eg. 0 if the page stayed the same, 1 for flick, 2+ for multiple fast flicks)
+* item - the item that is now visible on screen
 
 | Type		 | Required |
 | -------- | -------- |
@@ -89,7 +78,7 @@ This callback will be called once ViewPager finish navigating to selected page (
 
 ### `scrollEnabled`
 
-When false, the content does not scroll. The default value is true.
+When false, the content will not respond to touch. The default value is true.
 
 | Type | Required |
 | ---- | -------- |
