@@ -6,11 +6,11 @@ ViewPager is a controlled component
 import ViewPager from 'react-view-pager-touch';
 
 <ViewPager
-	items={dates}
-	renderItem={renderCalendar}
-	onChangePage={this.changePage}
-	currentPage={currentPage}
-	minPage={3}
+    items={dates}
+    renderItem={renderCalendar}
+    onChangePage={this.changePage}
+    currentPage={currentPage}
+    minPage={3}
 />
 ```
 
@@ -26,19 +26,31 @@ ViewPager enables dragging and flicking left and right between items:
 
 ```
 render() {
-	return (
-		<ViewPager
-			items={dates}
-			renderItem={renderCalendar}
-			onChangePage={this.changePage}
-			currentPage={currentPage}
-			minPage={3}
-		/>
-	);
+    return (
+        <ViewPager
+            items={dates}
+            renderItem={renderCalendar}
+            currentPage={currentPage}
+            minPage={3}
+            onPageSelected={this.changePage}
+        />
+    );
 }
 ```
 
 ## Props
+
+### `items`
+
+An array of items that will become your pages.
+
+---
+
+### `renderItem`
+
+A function that returns a React component that renders the page.
+
+---
 
 ### `currentPage`
 
