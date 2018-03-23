@@ -6,11 +6,11 @@ ViewPager is a controlled component
 import ViewPager from 'react-view-pager-touch';
 
 <ViewPager
-    items={dates}
-    renderItem={renderCalendar}
-    onChangePage={this.changePage}
-    currentPage={currentPage}
-    minPage={3}
+	items={dates}
+	renderItem={renderCalendar}
+	onChangePage={this.changePage}
+	currentPage={currentPage}
+	minPage={3}
 />
 ```
 
@@ -28,43 +28,25 @@ ViewPager enables dragging and flicking left and right between items:
 render() {
 	return (
 		<ViewPager
-            items={dates}
-            renderItem={renderCalendar}
-            onChangePage={this.changePage}
-            currentPage={currentPage}
-            minPage={3}
+			items={dates}
+			renderItem={renderCalendar}
+			onChangePage={this.changePage}
+			currentPage={currentPage}
+			minPage={3}
 		/>
 	);
 }
 ```
 
-### Props
-
-* [View props...](view.md#props)
-
-- [`initialPage`](viewpagerandroid.md#initialpage)
-- [`onPageScroll`](viewpagerandroid.md#onpagescroll)
-- [`onPageScrollStateChanged`](viewpagerandroid.md#onpagescrollstatechanged)
-- [`onPageSelected`](viewpagerandroid.md#onpageselected)
-- [`scrollEnabled`](viewpagerandroid.md#scrollenabled)
-
-### Type Definitions
-
-* [`ViewPagerScrollState`](viewpagerandroid.md#viewpagerscrollstate)
-
----
-
-# Reference
-
 ## Props
 
 ### `currentPage`
 
-Index of initial page that should be selected. Use `setPage` method to update the page, and `onPageSelected` to monitor page changes
+Index of the page that should be selected.
 
 | Type	 | Required |
 | ------ | -------- |
-| number | No	    |
+| number | No		|
 
 ---
 
@@ -111,4 +93,4 @@ When false, the content does not scroll. The default value is true.
 
 | Type | Required |
 | ---- | -------- |
-| bool | No			 |
+| bool | No	      |
