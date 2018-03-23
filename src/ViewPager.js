@@ -5,7 +5,6 @@ import clamp from './util/clamp';
 import PropTypes from 'prop-types';
 
 const ios = !!navigator.userAgent.match('iPhone OS');
-const width = document.body.clientWidth;
 const easeOutCubic = (t) => (--t) * t * t + 1;
 const range = (n) => Array.apply(null, {length: n}).map(Number.call, Number);
 
@@ -18,6 +17,7 @@ class ViewPager extends Component {
 		minPage: PropTypes.number,
 		className: PropTypes.string,
 		scrollEnabled: PropTypes.bool,
+		onPageScrollStateChanged: PropTypes.func,
 	};
 
 	static defaultProps = {
@@ -27,47 +27,40 @@ class ViewPager extends Component {
 		items: [],
 		className: '',
 		scrollEnabled: true,
+		onPageScrollStateChanged: () => null,
 	};
 
 	constructor(props) {
 		super(props);
-		const {itemsPerPage, items, minPage} = props;
-
-		this.numPages = Math.ceil(items.length / itemsPerPage);
-
-		this.minX = minPage * width;
-		this.maxX = this.numPages * width;
-		this.x = this.minX;
 
 		this.scrollTo = this.scrollTo.bind(this);
 		this.coast = this.coast.bind(this);
 		this.touchStart = this.touchStart.bind(this);
 		this.touchMove = this.touchMove.bind(this);
 		this.touchEnd = this.touchEnd.bind(this);
+		this.domReady = this.domReady.bind(this);
+
+		this.state = {width: 0};
+		this.travelingToPage = props.currentPage;
 	}
 
 	componentWillReceiveProps(nextProps) {
-		this.coast(nextProps.currentPage);
+		if (nextProps.currentPage !== this.travelingToPage) {
+			this.coast(nextProps.currentPage, false);
+		}
 	}
 
 	componentDidMount() {
 		this.el.addEventListener('touchstart', this.touchStart);
 		this.el.addEventListener('touchmove', this.touchMove);
 		this.el.addEventListener('touchend', this.touchEnd);
-		setTimeout(() => {
-			this.scrollTo(this.x); // sync first render
-		}, 0);
 	}
 
 	render() {
 		const {id, className} = this.props;
 
 		return (
-			<div
-				id={id}
-				className={`viewpager ${className}`}
-				ref={el => this.el = el}
-			>
+			<div id={id} className={`viewpager ${className}`} ref={this.domReady}>
 				<div className="over" id="over-left" ref={el => this.overLeft = el}/>
 				<div className="over" id="over-right" ref={el => this.overRight = el}/>
 				<div className="viewpager-canvas" ref={el => this.canvas = el}>
@@ -77,10 +70,28 @@ class ViewPager extends Component {
 		);
 	}
 
+	domReady(el) {
+		if (!el) return console.log('WTF REACT?!');
+
+		const {itemsPerPage, items, minPage, currentPage} = this.props;
+		const width = el.clientWidth;
+
+		this.el = el;
+		this.numPages = Math.ceil(items.length / itemsPerPage);
+		this.minX = minPage * width;
+		this.maxX = this.numPages * width;
+		this.x = this.minX;
+		this.travelingToPage = currentPage;
+
+		this.setState({'width': width});
+
+		setTimeout(() => this.scrollTo(this.x), 0);
+	}
+
 	renderPage(index) {
 		const {renderItem, items, itemsPerPage} = this.props;
 
-		const startItemIndex = (index * itemsPerPage);
+		const startItemIndex = index * itemsPerPage;
 		const itemsToRender = items.slice(startItemIndex, startItemIndex + itemsPerPage);
 
 		return (
@@ -91,6 +102,7 @@ class ViewPager extends Component {
 	}
 
 	scrollTo(pos) {
+		const {width} = this.state;
 		const over = (pos < this.minX || pos > this.maxX);
 		if (over) {
 			if (ios) {
@@ -118,13 +130,22 @@ class ViewPager extends Component {
 	touchStart(e) {
 		this.startX = this.x;
 		this.scrollHoriz = false;
-		if (this.props.scrollEnabled) pan.initializeTouch(e);
+		if (this.props.scrollEnabled) {
+			pan.initializeTouch(e);
+		}
 	}
 
 	touchMove(e) {
 		if (!e.cancelable || !this.props.scrollEnabled) return;
+
+		const {onPageScrollStateChanged} = this.props;
 		const {dx, absX} = pan.trackMovement(e);
-		if (absX > 10) this.scrollHoriz = true;
+
+		if (!this.scrollHoriz && absX > 10) {
+			this.scrollHoriz = true;
+			onPageScrollStateChanged('dragging');
+		}
+
 		if (this.scrollHoriz) {
 			e.preventDefault();
 			this.scrollTo(this.startX - dx);
@@ -133,19 +154,15 @@ class ViewPager extends Component {
 
 	touchEnd() {
 		if (!this.scrollHoriz) return;
-		const {currentPage, onPageSelected, minPage, items} = this.props;
+
+		const {minPage} = this.props;
+		const {width} = this.state;
 		const {vx, flick} = pan.getReleaseVelocity();
 
 		// Flick (momentum) or snap (round) according to flick velocity
-		let newPage = flick ? currentPage - Math.sign(vx) : Math.round(this.x / width);
+		let newPage = flick ? this.travelingToPage - Math.sign(vx) : Math.round(this.x / width);
 		newPage = clamp(newPage, minPage, this.numPages);
-
-		onPageSelected({
-			position: newPage,
-			previous: currentPage,
-			offset: Math.sign(newPage - currentPage),
-			item: items[newPage],
-		});
+		this.coast(newPage, true);
 
 		// Clear android overflow
 		if (!ios) {
@@ -156,7 +173,12 @@ class ViewPager extends Component {
 		}
 	}
 
-	coast(page) {
+	coast(page, triggerCallback) {
+		this.travelingToPage = page;
+
+		const {onPageSelected, currentPage, items, onPageScrollStateChanged} = this.props;
+		const {width} = this.state;
+
 		const x1 = this.x,
 			x2 = page * width,
 			dx = x2 - x1,
@@ -165,14 +187,26 @@ class ViewPager extends Component {
 		const sx = pan.flick ? pan.sx : .5;
 		const duration = Math.abs(dx / sx);
 
+		onPageScrollStateChanged('settling');
+
 		const animate = () => {
 			if (pan.touch) return;
 			const t = Date.now() - t1;
 			if (t >= duration) {
 				this.scrollTo(x2);
+
+				// callback if initiated by user gesture
+				if (triggerCallback) onPageSelected({
+					position: page,
+					previous: currentPage,
+					offset: Math.sign(page - currentPage),
+					item: items[page],
+				});
+
+				onPageScrollStateChanged('idle');
 			} else {
 				const dx2 = dx * easeOutCubic(t / duration);
-				this.scrollTo(x1 + dx2, true);
+				this.scrollTo(x1 + dx2);
 				requestAnimationFrame(animate);
 			}
 		};
