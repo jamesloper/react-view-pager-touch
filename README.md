@@ -44,9 +44,11 @@ render() {
 
 Index of the page that should be selected.
 
-| Type	 | Required |
-| ------ | -------- |
-| number | No		|
+---
+
+### `minPage`
+
+Will not allow scrolling to pages that come before this page.
 
 ---
 
@@ -54,32 +56,20 @@ Index of the page that should be selected.
 
 Function called when the page scrolling state has changed. The page scrolling state can be in 3 states:
 
-* idle, meaning there is no interaction with the page scroller happening at the time
-* dragging, meaning there is currently an interaction with the page scroller
-* settling, meaning that there was an interaction with the page scroller, and the scroller is now finishing it's animation
-
-| Type		 | Required |
-| -------- | -------- |
-| function | No			 |
+* `idle` - meaning there is no interaction with the page scroller happening at the time
+* `dragging` - meaning there is currently an interaction with the page scroller
+* `settling` - meaning that there was an interaction with the page scroller, and the scroller is now finishing it's animation
 
 ---
 
 ### `onPageSelected`
 
-This callback will be called once ViewPager finish navigating to selected page (when user swipes between pages). The `event.nativeEvent` object passed to this callback will have following fields:
+This callback will be called once ViewPager finish navigating to selected page (when user swipes between pages). The `event` object passed to this callback will have following fields:
 
-* position - index of page that has been selected
-* offset - the new page index minus the old page index (eg. 0 if the page stayed the same, 1 for flick, 2+ for multiple fast flicks)
-* item - the item that is now visible on screen
-
-| Type		 | Required |
-| -------- | -------- |
-| function | No			 |
+* `position` - index of page that has been selected
+* `offset` - the new page index minus the old page index (eg. 0 if the page stayed the same, 1 for flick, 2+ for multiple fast flicks)
+* `item` - the item that is now visible on screen
 
 ### `scrollEnabled`
 
 When false, the content will not respond to touch. The default value is true.
-
-| Type | Required |
-| ---- | -------- |
-| bool | No	      |
