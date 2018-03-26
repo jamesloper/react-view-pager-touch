@@ -25,38 +25,24 @@ import ViewPager from 'react-view-pager-touch';
 
 ## Props
 
-`array: items`
+`items` - An array of items that will become your pages.
 
-An array of items that will become your pages.
+`renderItem` - A function that returns a React component that renders the page.
 
-`callback: renderItem`
+`currentPage` - Index of the page that should be selected.
 
-A function that returns a React component that renders the page.
+`minPage` - Disallow scrolling to pages that come before this page.
 
-`int: currentPage`
-
-Index of the page that should be selected.
-
-`int: minPage`
-
-Will not allow scrolling to pages that come before this page.
-
-`callback: onPageScrollStateChanged`
-
-Function called when the page scrolling state has changed. The page scrolling state can be in 3 states:
+`onPageScrollStateChanged` - Function called when the page scrolling state has changed. The page scrolling state can be in 3 states:
 
 * `idle` - there is no interaction with the page scroller happening at the time
 * `dragging` - there is currently an interaction with the page scroller
 * `settling` - there was an interaction with the page scroller, and the page scroller is now settling to its idle position
 
-`callback: onPageSelected(e)`
-
-Function called once ViewPager finishes settling to selected page. The `event` object passed to this callback will have following fields:
+`onPageSelected` - Function called once ViewPager finishes settling to selected page. The `event` object passed to this callback will have following fields:
 
 * `position` - index of page that has been selected
 * `offset` - the new page index minus the old page index (eg. 0 if the page stayed the same, 1 for flick, 2+ for multiple fast flicks)
 * `item` - the item that is now visible on screen
 
-`boolean: scrollEnabled`
-
-When false, the content will not respond to touch. The default value is true.
+`scrollEnabled` - When false, the content will not respond to touch. The default value is true.
