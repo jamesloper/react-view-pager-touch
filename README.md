@@ -2,14 +2,7 @@ A ViewPager-like React Component that has perfect kinetic scrolling, scroll lock
 
 `npm install --save react-view-pager-touch`
 
-Include this CSS in your styles file:
-```css
-.viewpager {overflow:hidden; position:relative; width:100%;}
-.viewpager-canvas {white-space:nowrap; width:100%; overflow:visible; backface-visibility:hidden; transform-style:flat;}
-.viewpager-view {width:100%; display:inline-block}
-```
-
-## Example
+## Examples
 
 ```javascript
 import ViewPager from 'react-view-pager-touch';
@@ -21,6 +14,20 @@ import ViewPager from 'react-view-pager-touch';
     currentPage={currentPage}
     minPage={3}
 />
+```
+
+Here is an implementation involving two stacked ViewPagers to recreate the well known calendar interface in iOS. Of course the grey overflow indicators only appear on Android, and on iOS there is the well known elasticity effect.
+
+![iOS Calendar in React](https://media.giphy.com/media/3eTPYYpf6i9Rx94nkU/giphy.gif)
+
+
+## Some CSS Required
+You may wish to configure the css in your own project. Please use this as a starting point for your own needs.
+
+```css
+.viewpager {overflow:hidden; position:relative; width:100%;}
+.viewpager-canvas {white-space:nowrap; width:100%; overflow:visible; backface-visibility:hidden; transform-style:flat;}
+.viewpager-view {width:100%; display:inline-block}
 ```
 
 ## Props
