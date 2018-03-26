@@ -4,7 +4,8 @@ import xform from './util/xform';
 import clamp from './util/clamp';
 import PropTypes from 'prop-types';
 
-const ios = !!navigator.userAgent.match('iPhone OS');
+//const ios = !!navigator.userAgent.match('iPhone OS');
+const ios = false;
 const easeOutCubic = (t) => (--t) * t * t + 1;
 const range = (n) => Array.apply(null, {length: n}).map(Number.call, Number);
 
@@ -44,6 +45,11 @@ class ViewPager extends Component {
 		this.travelingToPage = props.currentPage;
 	}
 
+	// shouldComponentUpdate(nextProps) {
+	// 	if (!this.state.width) return true;
+	// 	return (nextProps.currentPage !== this.props.currentPage);
+	// }
+
 	componentWillReceiveProps(nextProps) {
 		if (nextProps.currentPage !== this.travelingToPage) {
 			this.coast(nextProps.currentPage, false);
@@ -71,7 +77,7 @@ class ViewPager extends Component {
 	}
 
 	domReady(el) {
-		if (!el) return console.log('WTF REACT?!');
+		if (!el) return console.log('dom not ready');
 
 		const {itemsPerPage, items, minPage, currentPage} = this.props;
 		const width = el.clientWidth;
@@ -80,23 +86,19 @@ class ViewPager extends Component {
 		this.numPages = Math.ceil(items.length / itemsPerPage);
 		this.minX = minPage * width;
 		this.maxX = this.numPages * width;
-		this.x = this.minX;
 		this.travelingToPage = currentPage;
 
-		this.setState({'width': width});
-
-		setTimeout(() => this.scrollTo(this.x), 0);
+		this.setState({'width': width}, () => {
+			this.scrollTo(currentPage * width);
+		});
 	}
 
 	renderPage(index) {
-		const {renderItem, items, itemsPerPage} = this.props;
-
-		const startItemIndex = index * itemsPerPage;
-		const itemsToRender = items.slice(startItemIndex, startItemIndex + itemsPerPage);
+		const {renderItem, items} = this.props;
 
 		return (
 			<div key={index} className="viewpager-view">
-				{itemsToRender.map((r, i) => renderItem(r, index + i))}
+				{renderItem(items[index], index)}
 			</div>
 		);
 	}
