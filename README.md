@@ -23,38 +23,25 @@ import ViewPager from 'react-view-pager-touch';
 />
 ```
 
-ViewPager enables dragging and flicking left and right between items:
-
-```
-<ViewPager
-    items={dates}
-    renderItem={renderCalendar}
-    currentPage={currentPage}
-    minPage={3}
-    onPageSelected={this.changePage}
-/>
-}
-```
-
 ## Props
 
-### `items`
+`array: items`
 
 An array of items that will become your pages.
 
-### `renderItem(item, i)`
+`callback: renderItem`
 
 A function that returns a React component that renders the page.
 
-### `currentPage`
+`int: currentPage`
 
 Index of the page that should be selected.
 
-### `minPage`
+`int: minPage`
 
 Will not allow scrolling to pages that come before this page.
 
-### `onPageScrollStateChanged(enum)`
+`callback: onPageScrollStateChanged`
 
 Function called when the page scrolling state has changed. The page scrolling state can be in 3 states:
 
@@ -62,7 +49,7 @@ Function called when the page scrolling state has changed. The page scrolling st
 * `dragging` - there is currently an interaction with the page scroller
 * `settling` - there was an interaction with the page scroller, and the page scroller is now settling to its idle position
 
-### `onPageSelected(e)`
+`callback: onPageSelected(e)`
 
 Function called once ViewPager finishes settling to selected page. The `event` object passed to this callback will have following fields:
 
@@ -70,6 +57,6 @@ Function called once ViewPager finishes settling to selected page. The `event` o
 * `offset` - the new page index minus the old page index (eg. 0 if the page stayed the same, 1 for flick, 2+ for multiple fast flicks)
 * `item` - the item that is now visible on screen
 
-### `scrollEnabled`
+`boolean: scrollEnabled`
 
 When false, the content will not respond to touch. The default value is true.
