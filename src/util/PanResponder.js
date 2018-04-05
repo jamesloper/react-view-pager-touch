@@ -1,9 +1,9 @@
 const FLICK_SPEED = .25; // pixels per ms
-const MEASURE_INTERVAL = 40; // ms
+const CUTOFF_INTERVAL = 50; // ms
 const SNAP_DURATION = 300;
 
 const weightAverageVelocity = (lastV, newV, elapsedTime) => {
-	const newWeight = Math.min(elapsedTime, MEASURE_INTERVAL) / MEASURE_INTERVAL;
+	const newWeight = Math.min(elapsedTime, CUTOFF_INTERVAL) / CUTOFF_INTERVAL;
 	const oldWeight = 1 - newWeight;
 
 	let weightedOld = (lastV * oldWeight) || 0;
@@ -21,7 +21,7 @@ class PanResponder {
 		this.originY = e.touches[0].screenY;
 
 		// Initialize tracker
-		this.horizontalLock = false;
+		this.locked = false;
 		this.vx = 0;
 		this.sx = 0;
 		this.lastTime = Date.now();
@@ -41,8 +41,15 @@ class PanResponder {
 		this.absX = Math.abs(this.dx);
 		this.absY = Math.abs(this.dy);
 
-		if (!this.horizontalLock && this.absX > 10) this.horizontalLock = true;
-		if (this.horizontalLock) e.preventDefault();
+		if (!this.locked) {
+			if (!e.cancelable || this.absY > 10) {
+				this.locked = 'y';
+			} else if (this.absX > 10) {
+				this.locked = 'h';
+			}
+		}
+
+		if (this.locked === 'h') e.preventDefault();
 
 		return this;
 	}

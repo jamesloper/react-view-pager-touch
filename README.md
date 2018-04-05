@@ -45,3 +45,6 @@ You may wish to configure the css in your own project. Please use this as a star
 * `position` - index of page that has been selected
 * `offset` - the new page index minus the old page index (eg. 0 if the page stayed the same, 1 for flick, 2+ for multiple fast flicks)
 * `item` - the item that is now visible on screen
+
+## Changes
+- 1.0.3: fixed scroll locking

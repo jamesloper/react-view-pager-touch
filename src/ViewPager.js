@@ -111,15 +111,15 @@ class ViewPager extends Component {
 	}
 
 	touchMove(e) {
-		const {dx, horizontalLock} = pan.track(e);
-		if (horizontalLock) this.scrollTo(this.startX - dx);
+		const {dx, locked} = pan.track(e);
+		if (locked === 'h') this.scrollTo(this.startX - dx);
 	}
 
 	touchEnd() {
-		const {vx, flick, horizontalLock} = pan.release();
+		const {vx, flick, locked} = pan.release();
 		const {width} = this.state;
 
-		if (!horizontalLock) return;
+		if (locked !== 'h') return;
 
 		if (flick) {
 			let newPage = this.travelingToPage - Math.sign(vx);
