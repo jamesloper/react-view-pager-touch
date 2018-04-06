@@ -47,7 +47,7 @@ class ViewPager extends Component {
 				<div className="over" id="over-left" ref={el => this.overLeft = el}/>
 				<div className="over" id="over-right" ref={el => this.overRight = el}/>
 				<div className="viewpager-canvas" ref={el => this.canvas = el}>
-					{range(items.length).map(this.renderPage)}
+					{items.map(this.renderPage)}
 				</div>
 			</div>
 		);
@@ -61,7 +61,7 @@ class ViewPager extends Component {
 
 		this.el = el;
 		this.minX = minPage * width;
-		this.maxX = items.length * width;
+		this.maxX = (items.length - 1) * width;
 		this.travelingToPage = currentPage;
 
 		this.setState({'width': width}, () => {
@@ -69,12 +69,12 @@ class ViewPager extends Component {
 		});
 	}
 
-	renderPage(index) {
+	renderPage(item, index) {
 		const {renderItem, items} = this.props;
 
 		return (
 			<div key={index} className="viewpager-view">
-				{renderItem(items[index], index)}
+				{renderItem(item, index)}
 			</div>
 		);
 	}
@@ -142,7 +142,7 @@ class ViewPager extends Component {
 		const {minPage, onPageSelected, currentPage, items} = this.props;
 		const {width} = this.state;
 
-		this.travelingToPage = clamp(page, minPage, items.length);
+		this.travelingToPage = clamp(page, minPage, items.length - 1);
 
 		const x1 = this.x,
 			x2 = this.travelingToPage * width,
