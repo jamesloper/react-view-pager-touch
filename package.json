@@ -1,6 +1,6 @@
 {
   "name": "react-view-pager-touch",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "A ViewPager-like React Component that has perfect kinetic scrolling, scroll locking, and bounce just like its native counterpart.",
   "main": "build/index.js",
   "scripts": {
