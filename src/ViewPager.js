@@ -21,7 +21,6 @@ class ViewPager extends Component {
 		this.touchStart = this.touchStart.bind(this);
 		this.touchMove = this.touchMove.bind(this);
 		this.touchEnd = this.touchEnd.bind(this);
-		this.domReady = this.domReady.bind(this);
 
 		this.state = {width: 0};
 		this.travelingToPage = props.currentPage;
@@ -34,32 +33,13 @@ class ViewPager extends Component {
 	}
 
 	componentDidMount() {
+		const {items, minPage, currentPage} = this.props;
+		const width = this.el.clientWidth;
+
 		this.el.addEventListener('touchstart', this.touchStart);
 		this.el.addEventListener('touchmove', this.touchMove);
 		this.el.addEventListener('touchend', this.touchEnd);
-	}
 
-	render() {
-		const {id, className, items} = this.props;
-
-		return (
-			<div id={id} className={`viewpager ${className}`} ref={this.domReady}>
-				<div className="over" id="over-left" ref={el => this.overLeft = el}/>
-				<div className="over" id="over-right" ref={el => this.overRight = el}/>
-				<div className="viewpager-canvas" ref={el => this.canvas = el}>
-					{items.map(this.renderPage)}
-				</div>
-			</div>
-		);
-	}
-
-	domReady(el) {
-		if (!el) return;
-
-		const {items, minPage, currentPage} = this.props;
-		const width = el.clientWidth;
-
-		this.el = el;
 		this.minX = minPage * width;
 		this.maxX = (items.length - 1) * width;
 		this.travelingToPage = currentPage;
@@ -69,9 +49,22 @@ class ViewPager extends Component {
 		});
 	}
 
+	render() {
+		const {id, className, items} = this.props;
+
+		return (
+			<div id={id} className={`viewpager ${className}`} ref={el => this.el = el}>
+				<div className="over" id="over-left" ref={el => this.overLeft = el}/>
+				<div className="over" id="over-right" ref={el => this.overRight = el}/>
+				<div className="viewpager-canvas" ref={el => this.canvas = el}>
+					{items.map(this.renderPage)}
+				</div>
+			</div>
+		);
+	}
+
 	renderPage(item, index) {
 		const {renderItem, items} = this.props;
-
 		return (
 			<div key={index} className="viewpager-view">
 				{renderItem(item, index)}
@@ -152,9 +145,10 @@ class ViewPager extends Component {
 		let duration = SNAP_DURATION;
 		if (useReleaseVelocity) duration = Math.abs(dx / pan.sx);
 
+		let t = 0;
 		const animate = () => {
 			if (pan.touch) return;
-			const t = Date.now() - t1;
+			t = Date.now() - t1;
 			if (t >= duration) {
 				this.scrollTo(x2);
 
@@ -172,7 +166,7 @@ class ViewPager extends Component {
 			}
 		};
 
-		requestAnimationFrame(animate);
+		animate();
 	}
 }
 
