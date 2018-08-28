@@ -1,11 +1,11 @@
-A ViewPager-like React Component that has perfect kinetic scrolling, scroll locking, and bounce just like its native counterpart.
+A ViewPager-like React Component that has perfect kinetic scrolling, scroll locking, and bounce just like its native counterpart, coded in the smallest possible way.
 
 `npm install --save react-view-pager-touch`
 
 ## Examples
 
 ```javascript
-import ViewPager from 'react-view-pager-touch';
+import view-pager from 'react-view-pager-touch';
 
 <ViewPager
     items={dates}
@@ -13,21 +13,22 @@ import ViewPager from 'react-view-pager-touch';
     onChangePage={this.changePage}
     currentPage={currentPage}
     minPage={3}
+    onDragStart={() => console.log('started dragging')}
 />
 ```
 
-Here is an implementation involving two stacked ViewPagers to recreate the well known calendar interface in iOS. Of course the grey overflow indicators only appear on Android, and on iOS there is the well known elasticity effect.
+Here is an implementation involving two stacked view-pagers to recreate the well known calendar interface in iOS. Of course the grey overflow indicators only appear on Android, and on iOS there is the well known elasticity effect.
 
 ![iOS Calendar in React](https://media.giphy.com/media/3eTPYYpf6i9Rx94nkU/giphy.gif)
 
 
 ## Some CSS Required
-You may wish to configure the css in your own project. Please use this as a starting point for your own needs.
+You may wish to configure the CSS in your own project. Use this as a starting point to customize for your use case.
 
 ```css
-.viewpager {overflow:hidden; position:relative; width:100%;}
-.viewpager-canvas {white-space:nowrap; width:100%; overflow:visible; backface-visibility:hidden; transform-style:flat;}
-.viewpager-view {width:100%; display:inline-block}
+.view-pager {overflow:hidden; position:relative; width:100%;}
+.view-pager-canvas {white-space:nowrap; width:100%; overflow:visible; backface-visibility:hidden; transform-style:flat;}
+.view-pager-view {width:100%; display:inline-block}
 ```
 
 ## Props
@@ -40,11 +41,13 @@ You may wish to configure the css in your own project. Please use this as a star
 
 `minPage` - Disallow scrolling to pages that come before this page.
 
-`onPageSelected` - Function called once ViewPager finishes settling to selected page. The `event` object passed to this callback will have following fields:
+`onPageSelected` - Function called once view-pager finishes settling to selected page. The `event` object passed to this callback will have following fields:
 
 * `position` - index of page that has been selected
 * `offset` - the new page index minus the old page index (eg. 0 if the page stayed the same, 1 for flick, 2+ for multiple fast flicks)
 * `item` - the item that is now visible on screen
+
+`onDragStart` - Use this to detect when the view pager has locked to horizontal mode. For example, when you begin scrolling you may want to deselect any touched elements.
 
 ## Changes
 - 1.0.3: fixed scroll locking

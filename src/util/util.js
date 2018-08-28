@@ -8,7 +8,5 @@ const clamp = (val, min, max) => {
 };
 
 const easeOutCubic = (t) => (--t) * t * t + 1;
-const range = (n) => Array.apply(null, {length: n}).map(Number.call, Number);
 
-
-export { clamp, xform, range, easeOutCubic };
+export { clamp, xform, easeOutCubic };

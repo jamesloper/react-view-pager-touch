@@ -17,8 +17,8 @@ class PanResponder {
 	}
 
 	initialize(e) {
-		this.originX = e.touches[0].screenX;
-		this.originY = e.touches[0].screenY;
+		this.originX = e.touches ? e.touches[0].screenX : e.screenX;
+		this.originY = e.touches ? e.touches[0].screenY : e.screenY;
 
 		// Initialize tracker
 		this.locked = false;
@@ -31,8 +31,8 @@ class PanResponder {
 
 	track(e) {
 		// Update new position
-		this.x = e.touches[0].screenX;
-		this.y = e.touches[0].screenY;
+		this.x = e.touches ? e.touches[0].screenX : e.screenX;
+		this.y = e.touches ? e.touches[0].screenY : e.screenY;
 		this._logVelocity();
 
 		// Get distance travelled
@@ -43,7 +43,7 @@ class PanResponder {
 
 		if (!this.locked) {
 			if (!e.cancelable || this.absY > 10) {
-				this.locked = 'y';
+				this.locked = 'v';
 			} else if (this.absX > 10) {
 				this.locked = 'h';
 			}
@@ -77,5 +77,5 @@ class PanResponder {
 	}
 }
 
-export default new PanResponder();
+export default PanResponder;
 export { FLICK_SPEED, SNAP_DURATION };
