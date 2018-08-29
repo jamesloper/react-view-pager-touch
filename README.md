@@ -5,7 +5,7 @@ A ViewPager-like React Component that has perfect kinetic scrolling, scroll lock
 ## Examples
 
 ```javascript
-import view-pager from 'react-view-pager-touch';
+import ViewPager from 'react-view-pager-touch';
 
 <ViewPager
     items={dates}
@@ -41,7 +41,7 @@ You may wish to configure the CSS in your own project. Use this as a starting po
 
 `minPage` - Disallow scrolling to pages that come before this page.
 
-`onPageSelected` - Function called once view-pager finishes settling to selected page. The `event` object passed to this callback will have following fields:
+`onPageSelected` - Function called once ViewPager finishes settling to selected page. The `event` object passed to this callback will have following fields:
 
 * `position` - index of page that has been selected
 * `offset` - the new page index minus the old page index (eg. 0 if the page stayed the same, 1 for flick, 2+ for multiple fast flicks)
@@ -49,5 +49,9 @@ You may wish to configure the CSS in your own project. Use this as a starting po
 
 `onDragStart` - Use this to detect when the view pager has locked to horizontal mode. For example, when you begin scrolling you may want to deselect any touched elements.
 
+`lazy` - If true, does not render pages that are not the `currentPage`
+
 ## Changes
 - 1.0.3: fixed scroll locking
+- 1.1.0: enhanced support for mouse events
+- 1.2.0: added support for lazy and resizing on the fly

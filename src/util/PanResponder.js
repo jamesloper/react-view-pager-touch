@@ -58,6 +58,7 @@ class PanResponder {
 		this._logVelocity();
 		this.touch = false;
 		this.sx = Math.abs(this.vx);
+		if (this.sx < 1.2) this.sx = 1.2; // One speedi boi
 		this.flick = this.sx >= FLICK_SPEED;
 		return this;
 	}

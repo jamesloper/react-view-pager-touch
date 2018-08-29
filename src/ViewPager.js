@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PanResponder, { SNAP_DURATION } from './util/PanResponder';
 import { clamp, easeOutCubic, xform } from './util/util';
 
-const ios = !!navigator.userAgent.match('iOS');
+const ios = !!navigator.userAgent.match('iPhone OS');
 
 class ViewPager extends Component {
 	static defaultProps = {
@@ -11,6 +11,7 @@ class ViewPager extends Component {
 		minPage: 0,
 		className: '',
 		onDragStart: () => null,
+		lazy: false,
 	};
 
 	constructor(props) {
@@ -22,21 +23,25 @@ class ViewPager extends Component {
 		this.touchStart = this.touchStart.bind(this);
 		this.touchMove = this.touchMove.bind(this);
 		this.touchEnd = this.touchEnd.bind(this);
+		this.updateWidth = this.updateWidth.bind(this);
 
-		this.state = {width: 0};
+		this.state = {'screenWidth': 0, 'width': 0};
 		this.travelingToPage = props.currentPage;
 		this.pan = new PanResponder();
 	}
 
-	componentWillReceiveProps(nextProps) {
-		if (nextProps.currentPage !== this.travelingToPage) {
-			this.coastToPage(nextProps.currentPage, false, false);
+	componentDidUpdate() {
+		const {currentPage} = this.props;
+		if (this.travelingToPage !== currentPage) {
+			this.coastToPage(currentPage, false, false);
 		}
 	}
 
 	componentDidMount() {
 		const {items, minPage, currentPage} = this.props;
 		const width = this.el.clientWidth;
+
+		addEventListener('resize', this.updateWidth);
 
 		this.el.addEventListener('touchstart', this.touchStart);
 		this.el.addEventListener('touchmove', this.touchMove);
@@ -50,12 +55,18 @@ class ViewPager extends Component {
 		this.maxX = (items.length - 1) * width;
 		this.travelingToPage = currentPage;
 
+		this.updateWidth();
+	}
+
+	updateWidth() {
+		const width = this.el.clientWidth;
 		this.setState({'width': width}, () => {
-			this.scrollTo(currentPage * width);
+			this.scrollTo(this.travelingToPage * width);
 		});
 	}
 
 	componentWillUnmount() {
+		removeEventListener('resize', this.updateWidth);
 		document.removeEventListener('mousemove', this.touchMove);
 		document.removeEventListener('mouseup', this.touchEnd);
 	}
@@ -76,9 +87,11 @@ class ViewPager extends Component {
 	}
 
 	renderPage(item, index) {
-		const {renderItem} = this.props;
+		const {renderItem, lazy, currentPage} = this.props;
 		return (
-			<div key={index} className="view-pager-view" children={renderItem(item, index)}/>
+			<div key={index} className="view-pager-view">
+				{!lazy || index === currentPage ? renderItem(item, index) : null}
+			</div>
 		);
 	}
 
