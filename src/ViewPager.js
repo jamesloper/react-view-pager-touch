@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import PanResponder, { SNAP_DURATION } from './util/PanResponder';
-import { clamp, easeOutCubic, xform } from './util/util';
-
-const ios = !!navigator.userAgent.match('iPhone OS');
+import { clamp, easeOutCubic, xform, isIos } from './util/util';
 
 class ViewPager extends Component {
 	static defaultProps = {
@@ -99,7 +97,7 @@ class ViewPager extends Component {
 		const {width} = this.state;
 		const over = (pos < this.minX || pos > this.maxX);
 		if (over) {
-			if (ios) {
+			if (isIos) {
 				if (pos < this.minX) pos -= (pos - this.minX) / 2;
 				if (pos > this.maxX) pos -= (pos - this.maxX) / 2;
 			} else {
@@ -158,7 +156,7 @@ class ViewPager extends Component {
 		}
 
 		// Clear android overflow
-		if (!ios) {
+		if (!isIos) {
 			this.overLeft.classList.add('ease-x');
 			this.overLeft.style[xform] = 'scaleX(0)';
 			this.overRight.classList.add('ease-x');

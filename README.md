@@ -17,7 +17,8 @@ import ViewPager from 'react-view-pager-touch';
 />
 ```
 
-Here is an implementation involving two stacked view-pagers to recreate the well known calendar interface in iOS. Of course the grey overflow indicators only appear on Android, and on iOS there is the well known elasticity effect.
+Here is an implementation involving two stacked view-pagers to recreate the well known calendar interface in iOS. Of course the grey overflow indicators only appear on Android, and on iOS there is the well known elasticity effect. (ex: https://www.hux.com)
+
 
 ![iOS Calendar in React](https://media.giphy.com/media/3eTPYYpf6i9Rx94nkU/giphy.gif)
 
@@ -55,3 +56,4 @@ You may wish to configure the CSS in your own project. Use this as a starting po
 - 1.0.3: fixed scroll locking
 - 1.1.0: enhanced support for mouse events
 - 1.2.0: added support for lazy and resizing on the fly
+- 1.2.1: bug fix for server side rendering and update devDependencies 
