@@ -57,3 +57,7 @@ You may wish to configure the CSS in your own project. Use this as a starting po
 - 1.1.0: enhanced support for mouse events
 - 1.2.0: added support for lazy and resizing on the fly
 - 1.2.1: bug fix for server side rendering and update devDependencies 
+
+## Tested in BrowserStack
+![Browser Stack](https://d2ogrdw2mh0rsl.cloudfront.net/production/images/static/header/header-logo.svg)
+![browserstack.com](https://www.browserstack.com/)
