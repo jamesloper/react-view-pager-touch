@@ -59,5 +59,6 @@ You may wish to configure the CSS in your own project. Use this as a starting po
 - 1.2.1: bug fix for server side rendering and update devDependencies 
 
 ## Tested in BrowserStack
-![Browser Stack](https://d2ogrdw2mh0rsl.cloudfront.net/production/images/static/header/header-logo.svg)
-![browserstack.com](https://www.browserstack.com/)
+<a href="https://www.browserstack.com/" target="_blank">
+    <img src="https://cdn.hux.com/readme-images/browserstack.png" height="60"/>
+</a>
