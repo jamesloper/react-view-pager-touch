@@ -60,5 +60,5 @@ You may wish to configure the CSS in your own project. Use this as a starting po
 
 ## Tested in BrowserStack
 <a href="https://www.browserstack.com/" target="_blank">
-    <img src="https://cdn.hux.com/readme-images/browserstack.png" height="60"/>
+    <img src="https://cdn.hux.com/readme-images/browserstack.png" height="50"/>
 </a>
